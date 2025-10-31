@@ -1,0 +1,89 @@
+import { Dimensions, LogBox, StyleSheet } from "react-native";
+import { themas } from "../../global/themes";
+
+export const styles = StyleSheet.create({
+container:{
+    flex:1,
+    alignItems:'center',
+    justifyContent:'center',
+    backgroundColor:themas.colors.primaria,
+    height:'100%',
+},
+boxTop:{
+    height:Dimensions.get('window').height / 3,
+    width:'100%',
+    alignItems:'center',
+    justifyContent:'center'
+},
+boxMiddle:{
+    height:Dimensions.get('window').height / 4,
+    width:'100%',
+    paddingHorizontal:20,
+
+},
+boxBottom:{
+    height:Dimensions.get('window').height / 3,
+    width:'100%',
+    alignItems:'center',
+    justifyContent:'center'
+},
+logoImg:{
+    width:200,
+    height:200
+},
+titleInput:{
+    marginLeft:5,
+    color:themas.colors.secundaria,
+    marginTop:20,
+},
+boxInput:{
+    width:'100%',
+    height:50,
+    borderRadius:5,
+    marginTop:10,
+    flexDirection:'row',
+    borderBottomWidth:2,
+    borderBottomColor:themas.colors.secundaria,
+    paddingHorizontal:10,
+    alignItems:'center',
+},
+input:{
+    height:'100%',
+    width:'90%',
+    color:themas.colors.secundaria
+},
+iconInput:{
+    width:25,
+    height:25,
+},
+buttonLogin:{
+    width:150,
+    height:50,
+    backgroundColor:themas.colors.secundaria,
+    borderRadius:40,
+    alignItems:'center',
+    justifyContent:'center'
+},
+buttonLoginText:{
+    color:themas.colors.primaria,
+    fontSize:18,
+    fontWeight:'bold'
+},
+textBottom:{
+    color:themas.colors.secundaria,
+    fontSize:16,
+    marginBottom:70
+},
+textBottomCreate:{
+    fontWeight:'bold',
+    textDecorationLine:'underline'
+},
+textForgetPassword:{
+    fontWeight:'bold',
+    textDecorationLine:'underline',
+    color:themas.colors.secundaria,
+    fontSize:12,
+    padding:5,
+    marginTop:5
+}
+})
