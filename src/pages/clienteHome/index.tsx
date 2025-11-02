@@ -22,7 +22,8 @@ const Tab = createBottomTabNavigator();
 
 export default function ClienteHome() {
   const route = useRoute();
-  const { nome } = route.params as { nome: string };
+  // const { nome } = route.params as { nome: string };
+  const nome = route?.params?.nome || 'Cliente'; // 👈 evita erro se não vier parâmetro
 
   // Estado para saber qual aba está ativa
 const [currentRoute, setCurrentRoute] = useState<string | undefined>('Home');

@@ -15,17 +15,17 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
-        <Stack.Navigator 
-          initialRouteName="Login" 
-          screenOptions={{
-            headerShown: false,
-            cardStyle: { backgroundColor: 'white' }
-          }}
-        >
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="PedreiroHome" component={PedreiroHome} />
-          <Stack.Screen name="ClienteHome" component={ClienteHome} />
-        </Stack.Navigator>
+          <Stack.Navigator
+            initialRouteName="ClienteHome"   // 👈 troca "Login" por "ClienteHome"
+            screenOptions={{
+              headerShown: false,
+              cardStyle: { backgroundColor: 'white' },
+            }}
+          >
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="PedreiroHome" component={PedreiroHome} />
+            <Stack.Screen name="ClienteHome" component={ClienteHome} />
+          </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
   );
