@@ -164,4 +164,131 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     color: themas.colors.secundaria,
   },
+  containerPerfil: {
+    flex: 1,
+    backgroundColor: themas.colors.primaria,
+  },
+  scrollContentPerfil: {
+    padding: 20,
+  },
+  centerContentPerfil: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    color: themas.colors.secundaria,
+    fontSize: 18,
+  },
+  profileSection: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  profileImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 2,
+    borderColor: themas.colors.secundaria,
+    backgroundColor: themas.colors.secundaria,
+    marginBottom: 10,
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  profileName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: themas.colors.secundaria,
+  },
+  profileEmail: {
+    color: themas.colors.secundaria,
+    fontSize: 16,
+  },
+  profilePhone: {
+    color: themas.colors.secundaria,
+    fontSize: 16,
+  },
+  editButton: {
+    alignSelf: 'center',
+    backgroundColor: themas.colors.secundaria,
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  editButtonText: {
+    color: themas.colors.primaria,
+    fontWeight: 'bold',
+  },
+  editSection: {
+    marginBottom: 30,
+  },
+  input: {
+    backgroundColor: themas.colors.primaria,
+    padding: 10,
+    marginVertical: 6,
+    borderWidth: 0,
+    borderBottomWidth: 2,
+    borderColor: themas.colors.secundaria,
+    color: themas.colors.secundaria,
+    fontSize: 16,
+  },
+  saveButton: {
+    backgroundColor: themas.colors.secundaria,
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  saveButtonText: {
+    color: themas.colors.primaria,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  section: {
+    marginTop: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: themas.colors.secundaria,
+    marginBottom: 10,
+  },
+  listItem: {
+    color: themas.colors.secundaria,
+    marginBottom: 5,
+  },
+  emptyText: {
+    color: themas.colors.secundaria,
+    fontStyle: 'italic',
+    textAlign: 'center',
+  },
+iconTitle: {
+  flexDirection: 'row',
+  alignItems: 'center',        
+  justifyContent: 'center',   
+  marginBottom: 8,
+},
+icon: {
+  width: 28,                  
+  height: 28,
+  marginRight: 8,
+  resizeMode: 'contain',     
+},
+sectionTitlePerfil: {
+  fontSize: 18,
+  fontWeight: 'bold',
+  color: themas.colors.secundaria,
+  textAlignVertical: 'center',
+},
+loadingContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: themas.colors.primaria, 
+},
+loadingTextPerfil: {
+  color: themas.colors.secundaria, 
+  fontSize: 18,
+  fontWeight: 'bold',
+},
+
 });

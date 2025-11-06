@@ -1,0 +1,108 @@
+🔐 Tela de Login / Cadastro
+
+Login com e-mail/senha ou telefone ✔
+
+Cadastro de novo cliente (usuário comum)
+
+Login do pedreiro (modo administrador) ✔
+
+
+🏠 Home – Sobre o Profissional
+
+Foto e nome do pedreiro ✔
+
+Biografia curta ✔
+
+Avaliação média (ex: ⭐ 4.8 de 5 baseada em avaliações dos clientes)
+
+Botão “Solicitar serviço” → redireciona para tela de agendamento ✔
+
+Mini carrossel com fotos de obras concluídas ✔
+
+
+🧱 Serviços
+
+Lista de serviços disponíveis ✔
+
+Descrição completa ✔
+
+Fotos ilustrativas ✔
+
+Preço médio e duração estimada por metro quadrado ✔
+
+Filtro por tipo ✔
+
+
+📅 Agendamentos
+
+Funcionalidades:
+
+Calendário com dias disponíveis
+
+Formulário de agendamento:
+
+Tipo de serviço
+
+Data e hora
+
+Endereço (campo com auto-preenchimento via CEP)
+
+Descrição do local
+
+Confirmação: “Seu agendamento foi enviado e aguarda aprovação do profissional.”
+O admin recebe uma notificação de um novo agendamento foi solicitado
+
+Histórico: agendamentos anteriores com status (pendente, confirmado, finalizado)
+
+🧩 APIs envolvidas:
+
+📍 ViaCEP API
+
+Auto-preenche rua, bairro e cidade ao digitar CEP
+
+Facilita cadastro de endereço no momento do agendamento
+
+
+
+👤 Perfil do Usuário
+
+Dados pessoais (nome, telefone, e-mail) ✔
+
+Lista de endereços salvos (consumindo ViaCEP para validar e preencher)
+
+Lista dos agendamentos feitos finalizados
+
+Botão “Editar dados” ✔
+
+Campo “Avaliar serviço” (disponível quando o status do agendamento for Finalizado, definido pelo admin)
+
+
+🧰 Modo Admin (Pedreiro)
+
+Funcionalidades adicionais (acesso restrito):
+
+Visualizar lista de agendamentos pendentes
+
+Aceitar / recusar / marcar como “finalizado”
+
+Ao aceitar aparecer "em andamento"
+
+Adicionar novos serviços com preço e descrição
+
+Ao aceitar o agendamento e chegar a hora do serviço aparecer Botão “Rota” → abrir mapa e gerar trajeto até o local do agendamento
+
+🧩 APIs envolvidas:
+
+📍 OpenStreetMap / Leaflet ou Google Maps Directions API
+
+Exibe mapa interativo e gera rota até o endereço do cliente
+
+Pode ser aberto direto em “Google Maps” com geo: URI se preferir algo simples no mobile
+
+Alternativas:
+
+OpenStreetMap + Nominatim API (grátis e open-source)
+
+🪶 Exemplo de fluxo de rota (admin):
+
+Ao clicar em “Ver rota”, o app pega o endereço do agendamento, converte em coordenadas via Nominatim (OpenStreetMap) e abre o mapa no app ou navegador padrão.

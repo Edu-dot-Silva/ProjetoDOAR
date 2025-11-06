@@ -1,0 +1,7 @@
+botao sair que ao clicar faz log off, pra isso provalmente teremos que mexer no login para ao fazer login só fazer uma vez ao entrar no app
+
+mudei a foto mas ao abrir o app denovo a foto sumiu, seria interessante criar uma tabela que armazena essa imagem ou teria como manter a imagem de outra maneira?
+
+ao criar e editar perfil a senha ser salva em hash
+
+bar do topo ter o nome do cliente e mesmo se for editado mudar la tambme
