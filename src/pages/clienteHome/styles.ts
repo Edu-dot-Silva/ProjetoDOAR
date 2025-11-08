@@ -237,9 +237,10 @@ export const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     marginTop: 10,
+    marginBottom: 80,
   },
   saveButtonText: {
-    color: themas.colors.primaria,
+    color: themas.colors.secundaria,
     fontWeight: 'bold',
     textAlign: 'center',
   },
@@ -290,5 +291,33 @@ loadingTextPerfil: {
   fontSize: 18,
   fontWeight: 'bold',
 },
+
+cardAgendamento: {
+  backgroundColor: themas.colors.secundaria,
+  borderRadius: 10,
+  padding: 12,
+  marginBottom: 12,
+},
+cardTituloAgendamento: {
+  fontSize: 16,
+  fontWeight: 'bold',
+  color: themas.colors.primaria,
+},
+cardDescricaoAgendamento: {
+  color: themas.colors.primaria,
+},
+subtitulo: {
+  fontSize: 18,
+  fontWeight: 'bold',
+  color: themas.colors.secundaria,
+  marginTop: 20,
+  marginBottom: 10,
+  textAlign: 'center',
+},
+  inputPlaceholder: {
+    color: themas.colors.secundaria,
+    opacity: 0.8, // um leve contraste
+  },
+
 
 });

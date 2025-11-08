@@ -1,7 +1,17 @@
-botao sair que ao clicar faz log off, pra isso provalmente teremos que mexer no login para ao fazer login só fazer uma vez ao entrar no app
+botao sair que ao clicar faz log off, pra isso provalmente teremos que mexer no login para ao fazer login  uma vez ao entrar no app e ficar salvo
 
 mudei a foto mas ao abrir o app denovo a foto sumiu, seria interessante criar uma tabela que armazena essa imagem ou teria como manter a imagem de outra maneira?
 
 ao criar e editar perfil a senha ser salva em hash
 
-bar do topo ter o nome do cliente e mesmo se for editado mudar la tambme
+bar do topo ter o nome do cliente e mesmo se for editado mudar la tambem
+
+se a data e horario ja estiver ocupado dar um alerta ao agendar que o horario ja esta ocupado
+
+ao agendar um novo serviço, depois que selecionar eles no dropdown o campo preço recebe o valor do serviço
+
+ao editar a senha aparecer o icone de olho para ver a senha
+
+o ednreço salvos ficar dentro de um dropdown list com scrol para scrollar entre os endereços salvos, mesma coisa para agendamentos finalizados
+
+na aba de agendamntos o navbar fica em cima do ultimo card de agendamento, deixar espaço livre

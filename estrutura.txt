@@ -1,6 +1,6 @@
 🔐 Tela de Login / Cadastro
 
-Login com e-mail/senha ou telefone ✔
+Login com e-mail/senha ✔
 
 Cadastro de novo cliente (usuário comum)
 
@@ -33,34 +33,33 @@ Preço médio e duração estimada por metro quadrado ✔
 Filtro por tipo ✔
 
 
-📅 Agendamentos
+📅 Agendamentos Cliente
 
-Funcionalidades:
+Ser nao tiver agendamento aparecer mensagem sem agendamentos e o botao de agendar ✔
 
-Calendário com dias disponíveis
+Calendário com dias e horas disponíveis ✔
 
 Formulário de agendamento:
 
-Tipo de serviço
+Tipo de serviço ✔
 
-Data e hora
+Data e hora ✔
 
-Endereço (campo com auto-preenchimento via CEP)
+Endereço (campo com auto-preenchimento via CEP) ✔
 
-Descrição do local
+Descrição do local ✔
 
-Confirmação: “Seu agendamento foi enviado e aguarda aprovação do profissional.”
-O admin recebe uma notificação de um novo agendamento foi solicitado
+Confirmação: “Seu agendamento foi enviado e aguarda aprovação do profissional.” ✔
 
-Histórico: agendamentos anteriores com status (pendente, confirmado, finalizado)
+Histórico: agendamentos anteriores com status (pendente, confirmado, em andamento, finalizado), se no lado o admin pedreiro o agendamento for confirmar o botao de cancelar some do lado o cliente e o status muda para aprovado e no lugar do botao de cancelar pequeno texto "esteja no local no dia e hora do serviço" quando começar vai para em andamento, quando finalizado some da aba de agendamentos e na aba de perfil vai para a a sessao agendamentos finalizados (pode ser um dropdown com os serviços finalizados) ao selecionar aparece as estrelas na parte de avaliar e um botao de enviar com a quantidade de estrelas que o cliente enviar (de 1 a 5) estrelas (só pode avaliar uma vez, uma vez avaliado se selecionar novamente nos seviços finalizados aparece as estrelas com o texto em baixo "Serviço ja avalidado")
 
 🧩 APIs envolvidas:
 
-📍 ViaCEP API
+📍 ViaCEP API ✔
 
-Auto-preenche rua, bairro e cidade ao digitar CEP
+Auto-preenche rua, bairro e cidade ao digitar CEP ✔
 
-Facilita cadastro de endereço no momento do agendamento
+Facilita cadastro de endereço no momento do agendamento ✔
 
 
 
@@ -68,7 +67,7 @@ Facilita cadastro de endereço no momento do agendamento
 
 Dados pessoais (nome, telefone, e-mail) ✔
 
-Lista de endereços salvos (consumindo ViaCEP para validar e preencher)
+Lista de endereços salvos (consumindo ViaCEP para validar e preencher) ✔
 
 Lista dos agendamentos feitos finalizados
 
