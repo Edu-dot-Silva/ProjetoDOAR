@@ -15,3 +15,7 @@ ao editar a senha aparecer o icone de olho para ver a senha
 o ednreço salvos ficar dentro de um dropdown list com scrol para scrollar entre os endereços salvos, mesma coisa para agendamentos finalizados
 
 na aba de agendamntos o navbar fica em cima do ultimo card de agendamento, deixar espaço livre
+
+no nav bar de baixo adicionar bordar com cor primaria
+
+definir fonte
