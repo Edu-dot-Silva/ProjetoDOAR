@@ -16,7 +16,7 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="ClienteHome"   // 👈 troca "Login" por "ClienteHome"
+            initialRouteName="PedreiroHome"   // 👈 troca "Login" por "ClienteHome"
             screenOptions={{
               headerShown: false,
               cardStyle: { backgroundColor: 'white' },
