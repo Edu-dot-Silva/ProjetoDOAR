@@ -5,23 +5,17 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  FlatList,
   ScrollView,
   Alert,
   Platform,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '../../config/supabase';
 import { styles } from './styles';
 import { themas } from '../../global/themes';
 import { ActivityIndicator } from 'react-native';
-
-
-// ÍCONES
-import iconEndereco from '../../assets/img/perfilClienteScreen/pin-point.png';
-import iconAgendamento from '../../assets/img/perfilClienteScreen/agenda.png';
-import iconAvaliacao from '../../assets/img/perfilClienteScreen/star.png';
 
 // Função utilitária para validar CPF
 function validarCPF(cpf: string): boolean {
@@ -50,22 +44,17 @@ function formatarDataBrasileira(dataISO: string | null): string {
   return `${dia}/${mes}/${ano}`;
 }
 
-
 export default function PerfilScreen() {
   const [usuario, setUsuario] = useState<any>(null);
-  const [enderecos, setEnderecos] = useState<any[]>([]);
-  const [agendamentos, setAgendamentos] = useState<any[]>([]);
   const [editando, setEditando] = useState(false);
   const [foto, setFoto] = useState<string | null>(null);
   const [mostrarCalendario, setMostrarCalendario] = useState(false);
   const [novaSenha, setNovaSenha] = useState('');
   const [repetirSenha, setRepetirSenha] = useState('');
 
-
   useEffect(() => {
     carregarUsuario();
-    carregarEnderecos();
-    carregarAgendamentos();
+    carregarFotoLocal(); // ⬅️ carregar foto armazenada
   }, []);
 
   const carregarUsuario = async () => {
@@ -73,18 +62,25 @@ export default function PerfilScreen() {
     setUsuario(data);
   };
 
-  const carregarEnderecos = async () => {
-    const { data } = await supabase.from('enderecos').select('*').eq('usuario_id', 1);
-    setEnderecos(data || []);
+  // ⬅️ SALVAR FOTO NO ASYNC STORAGE
+  const salvarFotoLocal = async (uri: string) => {
+    try {
+      await AsyncStorage.setItem('@foto_perfil', uri);
+    } catch (e) {
+      console.log('Erro ao salvar foto:', e);
+    }
   };
 
-  const carregarAgendamentos = async () => {
-    const { data } = await supabase
-      .from('agendamentos')
-      .select('*')
-      .eq('usuario_id', 1)
-      .eq('status', 'finalizado');
-    setAgendamentos(data || []);
+  // ⬅️ CARREGAR FOTO
+  const carregarFotoLocal = async () => {
+    try {
+      const uri = await AsyncStorage.getItem('@foto_perfil');
+      if (uri) {
+        setFoto(uri);
+      }
+    } catch (e) {
+      console.log('Erro ao carregar foto:', e);
+    }
   };
 
   const escolherFoto = async () => {
@@ -96,20 +92,20 @@ export default function PerfilScreen() {
     });
 
     if (!result.canceled) {
-      setFoto(result.assets[0].uri);
+      const uri = result.assets[0].uri;
+      setFoto(uri);
+      salvarFotoLocal(uri); // ⬅️ salva automaticamente
     }
   };
 
   const salvarEdicao = async () => {
     if (!usuario) return;
 
-    // valida CPF antes de salvar
     if (usuario.cpf && !validarCPF(usuario.cpf)) {
       Alert.alert('CPF inválido', 'Por favor, insira um CPF válido.');
       return;
     }
 
-    // valida senha
     if (novaSenha || repetirSenha) {
       if (novaSenha !== repetirSenha) {
         Alert.alert('Erro', 'As senhas não coincidem.');
@@ -125,10 +121,7 @@ export default function PerfilScreen() {
       data_nascimento: usuario.data_nascimento,
     };
 
-    // se a senha foi informada, adiciona no update
-    if (novaSenha) {
-      updateData.senha_hash = novaSenha; // 🔐 depois podemos aplicar um hash antes de salvar
-    }
+    if (novaSenha) updateData.senha_hash = novaSenha;
 
     const { error } = await supabase
       .from('usuarios')
@@ -145,7 +138,6 @@ export default function PerfilScreen() {
     }
   };
 
-
   if (!usuario) {
     return (
       <View style={styles.loadingContainer}>
@@ -154,8 +146,6 @@ export default function PerfilScreen() {
       </View>
     );
   }
-
-
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
     setMostrarCalendario(false);
@@ -169,20 +159,26 @@ export default function PerfilScreen() {
 
   return (
     <ScrollView style={styles.containerPerfil} contentContainerStyle={styles.scrollContentPerfil}>
+      
       {/* Foto de perfil */}
       <View style={styles.profileSection}>
         <TouchableOpacity onPress={escolherFoto}>
           <Image
-            source={foto ? { uri: foto } : require('../../assets/img/perfilClienteScreen/builder.png')}
+            source={
+              foto
+                ? { uri: foto }
+                : require('../../assets/img/perfilClienteScreen/builder.png')
+            }
             style={styles.profileImage}
           />
         </TouchableOpacity>
+
         <Text style={styles.profileName}>{usuario.nome}</Text>
         <Text style={styles.profileEmail}>{usuario.email}</Text>
         <Text style={styles.profilePhone}>{usuario.telefone || 'Sem telefone cadastrado'}</Text>
       </View>
 
-      {/* Botão de editar */}
+      {/* Botão Editar */}
       <TouchableOpacity style={styles.editButton} onPress={() => setEditando(!editando)}>
         <Text style={styles.editButtonText}>{editando ? 'Cancelar' : 'Editar dados'}</Text>
       </TouchableOpacity>
@@ -190,24 +186,28 @@ export default function PerfilScreen() {
       {/* Campos editáveis */}
       {editando && (
         <View style={styles.editSection}>
+
           <TextInput
             style={styles.input}
             placeholder="Nome"
             value={usuario.nome}
             onChangeText={(t) => setUsuario({ ...usuario, nome: t })}
           />
+
           <TextInput
             style={styles.input}
             placeholder="CPF"
             value={usuario.cpf || ''}
             onChangeText={(t) => setUsuario({ ...usuario, cpf: t })}
           />
+
           <TextInput
             style={styles.input}
             placeholder="Email"
             value={usuario.email}
             onChangeText={(t) => setUsuario({ ...usuario, email: t })}
           />
+
           <TextInput
             style={styles.input}
             placeholder="Telefone"
@@ -215,12 +215,12 @@ export default function PerfilScreen() {
             onChangeText={(t) => setUsuario({ ...usuario, telefone: t })}
           />
 
-          {/* Campo de data com seletor */}
+          {/* Data de nascimento */}
           <TouchableOpacity onPress={() => setMostrarCalendario(true)}>
             <TextInput
               style={styles.input}
               placeholder="Data de nascimento"
-              value={formatarDataBrasileira(usuario.data_nascimento) || ''}
+              value={formatarDataBrasileira(usuario.data_nascimento)}
               editable={false}
               placeholderTextColor={themas.colors.secundaria}
             />
@@ -237,84 +237,29 @@ export default function PerfilScreen() {
             />
           )}
 
+          {/* Senhas */}
           <TextInput
             style={[styles.input, { color: '#dc5633' }]}
             placeholder="Nova senha"
-            placeholderTextColor="#dc5633"
             secureTextEntry
             value={novaSenha}
             onChangeText={setNovaSenha}
           />
+
           <TextInput
             style={[styles.input, { color: '#dc5633' }]}
             placeholder="Repetir senha"
-            placeholderTextColor="#dc5633"
             secureTextEntry
             value={repetirSenha}
             onChangeText={setRepetirSenha}
           />
 
-
+          {/* Salvar */}
           <TouchableOpacity style={styles.saveButton} onPress={salvarEdicao}>
             <Text style={styles.saveButtonText}>Salvar alterações</Text>
           </TouchableOpacity>
         </View>
       )}
-
-      {/* Endereços */}
-      <View style={styles.section}>
-        <View style={styles.iconTitle}>
-          <Image source={iconEndereco} style={styles.icon} />
-          <Text style={styles.sectionTitlePerfil}>Endereços salvos</Text>
-        </View>
-        {enderecos.length === 0 ? (
-          <Text style={styles.emptyText}>Sem endereços salvos</Text>
-        ) : (
-          <FlatList
-            data={enderecos}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <Text style={styles.listItem}>
-                {item.rua}, {item.numero} - {item.bairro}, {item.cidade}/{item.estado}
-              </Text>
-            )}
-          />
-        )}
-      </View>
-
-      {/* Agendamentos finalizados */}
-      <View style={styles.section}>
-        <View style={styles.iconTitle}>
-          <Image source={iconAgendamento} style={styles.icon} />
-          <Text style={styles.sectionTitlePerfil}>Agendamentos finalizados</Text>
-        </View>
-        {agendamentos.length === 0 ? (
-          <Text style={styles.emptyText}>Sem agendamentos finalizados</Text>
-        ) : (
-          <FlatList
-            data={agendamentos}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <Text style={styles.listItem}>
-                Serviço #{item.servico_id} em {formatarDataBrasileira(item.data_agendamento)}
-              </Text>
-            )}
-          />
-        )}
-      </View>
-
-      {/* Avaliação */}
-      <View style={styles.section}>
-        <View style={styles.iconTitle}>
-          <Image source={iconAvaliacao} style={styles.icon} />
-          <Text style={styles.sectionTitlePerfil}>Avaliar serviço</Text>
-        </View>
-        {agendamentos.length === 0 ? (
-          <Text style={styles.emptyText}>Sem agendamentos finalizados</Text>
-        ) : (
-          <Text style={styles.listItem}>Área de avaliação (em desenvolvimento)</Text>
-        )}
-      </View>
     </ScrollView>
   );
 }

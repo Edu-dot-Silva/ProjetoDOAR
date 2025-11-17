@@ -77,11 +77,12 @@ export default function Login() {
         return;
       }
 
-      if (data.tipo_usuario === 1) {
-        navigation.navigate('PedreiroHome', {nome: data.nome});
-      } else {
-        navigation.navigate('ClienteHome', {nome: data.nome});
-      }
+if (data.tipo_usuario === 1) {
+  navigation.navigate('PedreiroHome', { nome: data.nome, id: data.id });
+} else {
+  navigation.navigate('ClienteHome', { nome: data.nome, id: data.id });
+}
+
     } catch (error) {
       Alert.alert('Erro', 'Falha ao fazer login. Verifique suas credenciais.');
       console.error(error);

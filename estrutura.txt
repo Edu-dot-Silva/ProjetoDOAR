@@ -105,3 +105,5 @@ OpenStreetMap + Nominatim API (grátis e open-source)
 🪶 Exemplo de fluxo de rota (admin):
 
 Ao clicar em “Ver rota”, o app pega o endereço do agendamento, converte em coordenadas via Nominatim (OpenStreetMap) e abre o mapa no app ou navegador padrão.
+
+criar novo usuario com hash e alterar a senha com hash

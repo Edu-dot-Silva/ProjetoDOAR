@@ -1,7 +1,8 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { RootStackParamList } from './src/@types/navigation';
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from './src/routes/types';
 import 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -16,7 +17,7 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="PedreiroHome"   // 👈 troca "Login" por "ClienteHome"
+            initialRouteName="Login"   // 👈 troca "Login" por "ClienteHome" ou PedreiroHome
             screenOptions={{
               headerShown: false,
               cardStyle: { backgroundColor: 'white' },

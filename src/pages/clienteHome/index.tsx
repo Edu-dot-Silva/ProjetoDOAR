@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StatusBar, Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer, useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { styles } from './styles';
 import { themas } from '../../global/themes';
@@ -22,17 +22,14 @@ const Tab = createBottomTabNavigator();
 
 export default function ClienteHome() {
   const route = useRoute();
-  // const { nome } = route.params as { nome: string };
-  const nome = route?.params?.nome || 'Cliente'; // 👈 evita erro se não vier parâmetro
+  const nome = route?.params?.nome || 'Cliente';
 
-  // Estado para saber qual aba está ativa
-const [currentRoute, setCurrentRoute] = useState<string | undefined>('Home');
+  const [currentRoute, setCurrentRoute] = useState<string | undefined>('Home');
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
 
-      {/* Cabeçalho só aparece na aba Home */}
       {currentRoute === 'Home' && (
         <View
           style={{
@@ -66,117 +63,110 @@ const [currentRoute, setCurrentRoute] = useState<string | undefined>('Home');
         </View>
       )}
 
-      {/* Navegação inferior */}
-      <NavigationContainer
-        independent={true}
-        onStateChange={(state) => {
-          const current = state?.routes[state.index]?.name;
-          setCurrentRoute(current);
+      {/* ⛔ REMOVIDO NavigationContainer interno ⛔ */}
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarShowLabel: true,
+          tabBarActiveTintColor: themas.colors.primaria,
+          tabBarInactiveTintColor: '#c04e3c',
+          tabBarStyle: {
+            position: 'absolute',
+            bottom: 10,
+            left: 10,
+            right: 10,
+            borderRadius: 20,
+            height: 65,
+            paddingBottom: 8,
+            paddingTop: 6,
+            backgroundColor: themas.colors.secundaria,
+            elevation: 5,
+            shadowOpacity: 0.2,
+          },
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: '600',
+          },
+        }}
+        screenListeners={{
+          state: (e) => {
+            const current = e.data.state?.routes[e.data.state.index]?.name;
+            setCurrentRoute(current);
+          },
         }}
       >
-        <Tab.Navigator
-          screenOptions={{
-            headerShown: false,
-            tabBarShowLabel: true,
-            tabBarActiveTintColor: themas.colors.primaria,
-            tabBarInactiveTintColor: '#c04e3c',
-            tabBarStyle: {
-              position: 'absolute',
-              bottom: 10,
-              left: 10,
-              right: 10,
-              borderRadius: 20,
-              height: 65,
-              paddingBottom: 8,
-              paddingTop: 6,
-              backgroundColor: themas.colors.secundaria,
-              elevation: 5,
-              shadowOpacity: 0.2,
-            },
-            tabBarLabelStyle: {
-              fontSize: 12,
-              fontWeight: '600',
-            },
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Image
+                source={iconHome}
+                style={{
+                  width: 24,
+                  height: 24,
+                  tintColor: focused ? themas.colors.primaria : '#c04e3c',
+                }}
+                resizeMode="contain"
+              />
+            ),
           }}
-        >
-          <Tab.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{
-              tabBarIcon: ({ focused }) => (
-                <Image
-                  source={iconHome}
-                  style={{
-                    width: 24,
-                    height: 24,
-                    tintColor: focused
-                      ? themas.colors.primaria
-                      : '#c04e3c',
-                  }}
-                  resizeMode="contain"
-                />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Serviços"
-            component={ServicosScreen}
-            options={{
-              tabBarIcon: ({ focused }) => (
-                <Image
-                  source={iconServicos}
-                  style={{
-                    width: 24,
-                    height: 24,
-                    tintColor: focused
-                      ? themas.colors.primaria
-                      : '#c04e3c',
-                  }}
-                  resizeMode="contain"
-                />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Agendamento"
-            component={AgendamentoScreen}
-            options={{
-              tabBarIcon: ({ focused }) => (
-                <Image
-                  source={iconAgendamento}
-                  style={{
-                    width: 24,
-                    height: 24,
-                    tintColor: focused
-                      ? themas.colors.primaria
-                      : '#c04e3c',
-                  }}
-                  resizeMode="contain"
-                />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Perfil"
-            component={PerfilScreen}
-            options={{
-              tabBarIcon: ({ focused }) => (
-                <Image
-                  source={iconPerfil}
-                  style={{
-                    width: 24,
-                    height: 24,
-                    tintColor: focused
-                      ? themas.colors.primaria
-                      : '#c04e3c',
-                  }}
-                  resizeMode="contain"
-                />
-              ),
-            }}
-          />
-        </Tab.Navigator>
-      </NavigationContainer>
+        />
+        
+        <Tab.Screen
+          name="Serviços"
+          component={ServicosScreen}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Image
+                source={iconServicos}
+                style={{
+                  width: 24,
+                  height: 24,
+                  tintColor: focused ? themas.colors.primaria : '#c04e3c',
+                }}
+                resizeMode="contain"
+              />
+            ),
+          }}
+        />
+
+        <Tab.Screen
+          name="Agendamento"
+          component={AgendamentoScreen}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Image
+                source={iconAgendamento}
+                style={{
+                  width: 24,
+                  height: 24,
+                  tintColor: focused ? themas.colors.primaria : '#c04e3c',
+                }}
+                resizeMode="contain"
+              />
+            ),
+          }}
+        />
+
+        <Tab.Screen
+          name="Perfil"
+          component={PerfilScreen}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Image
+                source={iconPerfil}
+                style={{
+                  width: 24,
+                  height: 24,
+                  tintColor: focused ? themas.colors.primaria : '#c04e3c',
+                }}
+                resizeMode="contain"
+              />
+            ),
+          }}
+        />
+      </Tab.Navigator>
     </SafeAreaView>
   );
 }

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
+import { View, Text, FlatList, TouchableOpacity, Alert, Linking } from 'react-native';
 import { supabase } from '../../config/supabase';
 import { themas } from '../../global/themes';
 import { styles } from './styles';
@@ -11,19 +10,9 @@ export default function AgendamentosPedreiroScreen() {
   const [agendamentos, setAgendamentos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Dropdown de STATUS
-  const [open, setOpen] = useState(false);
-  const [statusSelecionado, setStatusSelecionado] = useState<string>('pendente');
-
-  const opcoesStatus = [
-    { label: 'Pendentes', value: 'pendente' },
-    { label: 'Aceitos', value: 'aceito' },
-    { label: 'Finalizados', value: 'concluido' },
-  ];
-
   useEffect(() => {
     carregarAgendamentos();
-  }, [statusSelecionado]);
+  }, []);
 
   const carregarAgendamentos = async () => {
     setLoading(true);
@@ -48,7 +37,7 @@ export default function AgendamentosPedreiroScreen() {
           estado
         )
       `)
-      .eq('status', statusSelecionado);
+      .eq('status', 'pendente'); // só mostra pendentes
 
     if (!error && data) {
       setAgendamentos(data);
@@ -57,48 +46,36 @@ export default function AgendamentosPedreiroScreen() {
     setLoading(false);
   };
 
-  const aceitarAgendamento = async (id: number) => {
+  // 👉 ABRIR WHATSAPP + deletar do banco + remover da lista
+  const abrirWhatsapp = async (item: any) => {
+    const telefone = item.usuarios?.telefone?.replace(/\D/g, '');
+
+    if (!telefone) {
+      Alert.alert('Erro', 'O cliente não possui telefone cadastrado.');
+      return;
+    }
+
+    const mensagem = `Olá ${item.usuarios.nome}, vi seu pedido de serviço "${item.servicos?.titulo}". Podemos conversar?`;
+    const url = `https://wa.me/55${telefone}?text=${encodeURIComponent(mensagem)}`;
+
+    // Abre WhatsApp
+    Linking.openURL(url).catch(() => {
+      Alert.alert('Erro', 'Não foi possível abrir o WhatsApp.');
+    });
+
+    // 👉 1) REMOVE IMEDIATAMENTE DA LISTA VISUAL
+    setAgendamentos((current) => current.filter((a) => a.id !== item.id));
+
+    // 👉 2) EXCLUI DO BANCO DEFINITIVAMENTE
     const { error } = await supabase
       .from('agendamentos')
-      .update({
-        status: 'aceito',
-        pedreiro_id: usuarioId,
-      })
-      .eq('id', id);
+      .delete()
+      .eq('id', item.id);
 
-    if (!error) {
-      Alert.alert('Serviço aceito!');
-      carregarAgendamentos();
+    if (error) {
+      Alert.alert('Erro', 'Não foi possível remover o agendamento do banco.');
+      console.log(error);
     }
-  };
-
-  const finalizarAgendamento = async (id: number) => {
-    const { error } = await supabase
-      .from('agendamentos')
-      .update({ status: 'concluido' })
-      .eq('id', id);
-
-    if (!error) {
-      Alert.alert('Serviço finalizado!');
-      carregarAgendamentos();
-    }
-  };
-
-  const recusarAgendamento = async (id: number) => {
-    Alert.alert('Recusar serviço', 'Deseja realmente recusar este agendamento?', [
-      { text: 'Cancelar', style: 'cancel' },
-      {
-        text: 'Sim',
-        style: 'destructive',
-        onPress: async () => {
-          const { error } = await supabase.from('agendamentos').delete().eq('id', id);
-
-          if (!error) {
-            carregarAgendamentos();
-          }
-        },
-      },
-    ]);
   };
 
   const formatarData = (dataISO: string, hora?: string) => {
@@ -110,23 +87,6 @@ export default function AgendamentosPedreiroScreen() {
     <View style={styles.containerServicosPedreiro}>
       <Text style={styles.tituloPedreiro}>Agendamentos</Text>
 
-      {/* Dropdown de STATUS */}
-      <DropDownPicker
-        open={open}
-        value={statusSelecionado}
-        items={opcoesStatus}
-        setOpen={setOpen}
-        setValue={setStatusSelecionado}
-        setItems={() => {}}
-        placeholder="Filtrar por status"
-        zIndex={1000}
-        style={styles.dropdownPedreiro}
-        dropDownContainerStyle={styles.dropdownContainerPedreiro}
-        listItemContainerStyle={styles.dropdownItemPedreiro}
-        labelStyle={styles.dropdownLabel}
-        selectedItemLabelStyle={styles.dropdownLabelSelecionadoPedreiro}
-      />
-
       {/* Lista */}
       {loading ? (
         <Text style={styles.loadingTextPedreiro}>Carregando...</Text>
@@ -136,7 +96,9 @@ export default function AgendamentosPedreiroScreen() {
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.listaContainerPedreiro}
           ListEmptyComponent={() => (
-            <Text style={styles.emptyTextPedreiro}>Nenhum serviço para este status.</Text>
+            <Text style={styles.emptyTextPedreiro}>
+              Nenhum agendamento disponível no momento.
+            </Text>
           )}
           renderItem={({ item }) => (
             <View style={styles.cardPedreiro}>
@@ -170,39 +132,15 @@ export default function AgendamentosPedreiroScreen() {
                 </Text>
               )}
 
-              {/* Botões */}
-              {statusSelecionado === 'pendente' && (
-                <>
-                  <TouchableOpacity
-                    style={[styles.saveButtonPedreiro, { backgroundColor: themas.colors.secundaria }]}
-                    onPress={() => aceitarAgendamento(item.id)}
-                  >
-                    <Text style={[styles.saveButtonTextPedreiro, { color: themas.colors.primaria }]}>
-                      Aceitar serviço
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={[styles.saveButtonPedreiro, { backgroundColor: '#b60000' }]}
-                    onPress={() => recusarAgendamento(item.id)}
-                  >
-                    <Text style={[styles.saveButtonTextPedreiro, { color: '#fff' }]}>
-                      Recusar serviço
-                    </Text>
-                  </TouchableOpacity>
-                </>
-              )}
-
-              {statusSelecionado === 'aceito' && (
-                <TouchableOpacity
-                  style={[styles.saveButtonPedreiro, { backgroundColor: 'green' }]}
-                  onPress={() => finalizarAgendamento(item.id)}
-                >
-                  <Text style={[styles.saveButtonTextPedreiro, { color: '#fff' }]}>
-                    Finalizar serviço
-                  </Text>
-                </TouchableOpacity>
-              )}
+              {/* 👉 Botão ÚNICO: Entrar em contato */}
+              <TouchableOpacity
+                style={[styles.saveButtonPedreiro, { backgroundColor: '#25D366' }]}
+                onPress={() => abrirWhatsapp(item)}
+              >
+                <Text style={[styles.saveButtonTextPedreiro, { color: '#fff' }]}>
+                  Entrar em contato
+                </Text>
+              </TouchableOpacity>
             </View>
           )}
         />

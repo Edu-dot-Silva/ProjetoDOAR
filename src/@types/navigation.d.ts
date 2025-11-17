@@ -1,5 +1,5 @@
-export type RootStackParamList = {
-  Login: undefined;
-  ClienteHome: { nome: string }; 
-  PedreiroHome: { nome: string };
-};
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}
